@@ -2,6 +2,23 @@
 
 Chain is a two-sided platform that links smallholder farmers with household consumers to reduce crop loss, lower food prices, and minimize waste. Both web and voice channels expose the same workflows so users can act even without the app open. Daily SMS alerts, outbound/interactive voice calls, and low-cost IoT hardware keep everyone connected to real-time insights.
 
+## Banglalink API Integration
+
+Chain leverages **Banglalink AppLink APIs** for SMS and subscription management across both portals:
+
+### SMS API Usage
+- **Farmer Portal**: Daily SMS alerts sent to farmers with critical farm insights, moisture threshold warnings, scheduled analytics summaries, and field health updates.
+- **Consumer Portal**: Order delivery SMS notifications sent to consumers when orders are dispatched, delivered, or require action.
+
+### Subscription API Usage
+- **Consumer Portal**: Premium subscription management for advanced features including:
+  - AI-powered nutrition assistant with personalized recommendations
+  - Advanced recipe suggestions with budget optimization
+  - Enhanced meal planning and nutrient gap analysis
+  - Priority support and early access to new features
+
+The subscription API handles subscription creation, renewal, cancellation, and payment processing, enabling users to unlock premium AI-driven features that enhance their food management experience.
+
 ## Repository Structure
 - `Farmer/backend` – Node/Express APIs for farm analytics, satellite/IoT ingestion, pricing, SMS/voice, and device management.
 - `Farmer/frontend` – React + Vite dashboard for farmers and admins.
@@ -47,7 +64,7 @@ Chain is a two-sided platform that links smallholder farmers with household cons
 - React + Vite frontends; PWA/push on consumer side
 - OpenAI for analytics/recipes/nutrition; Bengali/English localization
 - Retell AI for voice; ElevenLabs/Realtime services present in farmer stack
-- SMS/telephony hooks (Applink ready in consumer backend)
+- **Banglalink AppLink APIs**: SMS API for daily farmer alerts and order delivery notifications; Subscription API for consumer premium features
 - Stripe client (consumer payments), Supabase auth/JWT for sessions
 - ESP32 (WiFi + GSM) firmware for sensing and kitchen/fridge prompts
 
@@ -55,7 +72,8 @@ Chain is a two-sided platform that links smallholder farmers with household cons
 - Node.js 18+ and npm
 - Supabase project (URL, Service Role key, Anon key)
 - OpenAI API key
-- Optional: Retell (voice), Applink SMS creds (consumer), Stripe keys (consumer store), weather API key, public URLs for webhooks
+- **Banglalink AppLink account**: Application ID and API password for SMS API (farmer alerts + consumer order delivery) and Subscription API (consumer premium features)
+- Optional: Retell (voice), Stripe keys (consumer store), weather API key, public URLs for webhooks
 
 ## Quick Start
 ### Farmer stack
@@ -85,18 +103,18 @@ npm run dev            # UI on http://localhost:5173 (or per Vite)
 ```
 
 ## Key Environment Variables
-- Farmer backend: `PORT`, `JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `WEATHER_API_KEY`, `OPENAI_API_KEY`, `RETELL_API_KEY`, `RETELL_AGENT_ID`, `RETELL_PHONE_NUMBER`, `AGRISENSE_BACKEND_URL`, `INTERNAL_API_TOKEN`, `CALL_ALERT_ENDPOINT`, `SATELLITE_API_URL`.
+- Farmer backend: `PORT`, `JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `WEATHER_API_KEY`, `OPENAI_API_KEY`, `RETELL_API_KEY`, `RETELL_AGENT_ID`, `RETELL_PHONE_NUMBER`, `AGRISENSE_BACKEND_URL`, `INTERNAL_API_TOKEN`, `CALL_ALERT_ENDPOINT`, `SATELLITE_API_URL`. **Banglalink AppLink**: `APPLINK_APPLICATION_ID`, `APPLINK_PASSWORD`, `APPLINK_BASE_URL` (for daily SMS alerts).
 - Farmer frontend: `VITE_API_BASE_URL`.
-- Consumer backend: `PORT`, `CLIENT_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET`, `OPENAI_API_KEY`, `CORS_ALLOW_ALL`, optional `APPLINK_APPLICATION_ID`, `APPLINK_PASSWORD`, `APPLINK_BASE_URL`, Stripe keys.
+- Consumer backend: `PORT`, `CLIENT_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET`, `OPENAI_API_KEY`, `CORS_ALLOW_ALL`, **Banglalink AppLink**: `APPLINK_APPLICATION_ID`, `APPLINK_PASSWORD`, `APPLINK_BASE_URL` (for SMS API - order delivery notifications, and Subscription API - premium features), Stripe keys.
 - Consumer frontend: `VITE_API_URL`.
 
 ## Notable Flows & Scheduling
-- Farmer cron jobs: daily analytics (07:00 Asia/Dhaka), moisture checks every 2 hours, SMS/voice alert dispatchers.
+- Farmer cron jobs: daily analytics (07:00 Asia/Dhaka), moisture checks every 2 hours, SMS/voice alert dispatchers. **Banglalink SMS API** sends daily farm insights, moisture warnings, and critical alerts to farmers.
 - Voice: `POST /api/voice/retell-webhook` and `POST /api/voice/get-farmer-data` expose farm + weather + field analysis during calls; unauth endpoints kept for IVR/agent access.
 - Satellite: `routes/satellite.js` and `services/scheduledFieldAnalysisService.js` handle imagery pulls and NDVI/NDMI processing.
 - Waste & pickup: farmer waste classification plus consumer donation/waste routes feed fertilizer processing and rewards.
-- Store: consumer `storeRoutes`, inventory pricing updates (`update-prices.js`), Stripe client ready in `config/stripeClient.js`.
-- Messaging/notifications: consumer push subscriptions (`006_create_push_subscriptions.sql`), notification routes, and SMS hooks.
+- Store: consumer `storeRoutes`, inventory pricing updates (`update-prices.js`), Stripe client ready in `config/stripeClient.js`. **Banglalink SMS API** sends order delivery notifications.
+- Messaging/notifications: consumer push subscriptions (`006_create_push_subscriptions.sql`), notification routes, and SMS hooks. **Banglalink Subscription API** manages premium feature access (AI assistant, advanced recipes, nutrition analysis).
 
 ## Database & Migrations
 - Consumer migrations live in `Consumer/backend/migrations`; run with `node run-migration.js` or `npm run migrate` (if script defined).
