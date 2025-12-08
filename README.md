@@ -3,6 +3,8 @@
 consumer url: https://chain-bl.netlify.app
 farmer url: https://agrisense-hero.netlify.app
 
+for .env variables contact to the admin (Sajid). +8801788040850 Whatsapp
+
 Chain is a two-sided platform that links smallholder farmers with household consumers to reduce crop loss, lower food prices, and minimize waste. Both web and voice channels expose the same workflows so users can act even without the app open. Daily SMS alerts, outbound/interactive voice calls, and low-cost IoT hardware keep everyone connected to real-time insights.
 
 ## Banglalink API Integration
