@@ -1,0 +1,9 @@
+
+2025-11-20T13:39:17.474Z - ERROR in suggestRecipes:
+Message: Request timed out.
+Name: Error
+Stack: Error: Request timed out.
+    at OpenAI.makeRequest (file:///home/alvee/Desktop/hackathon/bubt-food/backend/node_modules/openai/client.mjs:292:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async suggestRecipes (file:///home/alvee/Desktop/hackathon/bubt-food/backend/src/controllers/recipeController.js:190:22)
+OpenAI Data: {}

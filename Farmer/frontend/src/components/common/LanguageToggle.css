@@ -1,0 +1,90 @@
+.language-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-language-toggle .language-toggle {
+  background-color: rgba(31, 122, 77, 0.1);
+  width: 100%;
+  justify-content: center;
+  padding: 8px;
+}
+
+.language-section {
+  margin-bottom: 10px;
+}
+
+.language-toggle-label {
+  font-size: 14px;
+  color: #fff;
+  margin-right: 4px;
+}
+
+.sidebar-language-toggle .language-toggle-label {
+  color: #333;
+}
+
+.language-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.language-button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-language-toggle .language-button {
+  border: 1px solid rgba(31, 122, 77, 0.3);
+  color: #333;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.language-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.sidebar-language-toggle .language-button:hover {
+  background-color: rgba(31, 122, 77, 0.1);
+  color: #1f7a4d;
+}
+
+.language-button.active {
+  background-color: #1f7a4d;
+  color: white;
+  border-color: #1f7a4d;
+}
+
+.sidebar-language-toggle .language-button.active {
+  background-color: #1f7a4d;
+  color: white;
+  border-color: #1f7a4d;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .language-toggle {
+    padding: 2px 6px;
+  }
+  
+  .language-toggle-label {
+    font-size: 12px;
+  }
+  
+  .language-button {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,5 @@
+    </div>
+  );
+}
+
+export default StoreAdmin;
