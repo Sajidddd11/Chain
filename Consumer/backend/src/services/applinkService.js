@@ -33,7 +33,7 @@ const makeAppLinkRequest = async (endpoint, payload) => {
   }
 
   const url = `${APPLINK_BASE_URL}${endpoint}`;
-  
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -64,12 +64,12 @@ export const subscribeUser = async (subscriberId) => {
   let formattedPhone = subscriberId;
   // Remove any existing tel: prefix or + sign to clean up
   formattedPhone = formattedPhone.replace(/^tel:/, '').replace(/^\+/, '');
-  
+
   // Ensure it starts with 880
   if (formattedPhone.startsWith('01')) {
     formattedPhone = `880${formattedPhone}`;
   }
-  
+
   // Add tel: prefix
   formattedPhone = `tel:${formattedPhone}`;
 
@@ -103,12 +103,12 @@ export const unsubscribeUser = async (subscriberId) => {
   let formattedPhone = subscriberId;
   // Remove any existing tel: prefix or + sign to clean up
   formattedPhone = formattedPhone.replace(/^tel:/, '').replace(/^\+/, '');
-  
+
   // Ensure it starts with 880
   if (formattedPhone.startsWith('01')) {
     formattedPhone = `880${formattedPhone}`;
   }
-  
+
   // Add tel: prefix
   formattedPhone = `tel:${formattedPhone}`;
 
@@ -196,11 +196,19 @@ export const getSubscriberChargingInfo = async (subscriberIds) => {
  * @returns {Promise<Object>} AppLink API response with reference number
  */
 export const requestChargingOTP = async (subscriberId, amount, externalTrxId) => {
-  // Format phone number
+  // Format phone number: 01XXXXXXXXX → tel:8801XXXXXXXXX
   let formattedPhone = subscriberId.replace(/^tel:/, '').replace(/^\+/, '');
-  if (formattedPhone.startsWith('01')) {
+
+  // Remove leading 0 if present, then add country code
+  if (formattedPhone.startsWith('0')) {
+    formattedPhone = formattedPhone.substring(1); // Remove leading 0
+  }
+
+  // Add country code if not present
+  if (!formattedPhone.startsWith('880')) {
     formattedPhone = `880${formattedPhone}`;
   }
+
   formattedPhone = `tel:${formattedPhone}`;
 
   const payload = {
@@ -236,9 +244,12 @@ export const requestChargingOTP = async (subscriberId, amount, externalTrxId) =>
  * @returns {Promise<Object>} AppLink API response
  */
 export const verifyChargingOTP = async (referenceNo, otp, sourceAddress) => {
-  // Format phone number
+  // Format phone number: 01XXXXXXXXX → tel:8801XXXXXXXXX
   let formattedPhone = sourceAddress.replace(/^tel:/, '').replace(/^\+/, '');
-  if (formattedPhone.startsWith('01')) {
+  if (formattedPhone.startsWith('0')) {
+    formattedPhone = formattedPhone.substring(1);
+  }
+  if (!formattedPhone.startsWith('880')) {
     formattedPhone = `880${formattedPhone}`;
   }
   formattedPhone = `tel:${formattedPhone}`;
@@ -271,9 +282,12 @@ export const verifyChargingOTP = async (referenceNo, otp, sourceAddress) => {
  * @returns {Promise<Object>} AppLink API response with balance info
  */
 export const queryBalance = async (subscriberId) => {
-  // Format phone number
+  // Format phone number: 01XXXXXXXXX → tel:8801XXXXXXXXX
   let formattedPhone = subscriberId.replace(/^tel:/, '').replace(/^\+/, '');
-  if (formattedPhone.startsWith('01')) {
+  if (formattedPhone.startsWith('0')) {
+    formattedPhone = formattedPhone.substring(1);
+  }
+  if (!formattedPhone.startsWith('880')) {
     formattedPhone = `880${formattedPhone}`;
   }
   formattedPhone = `tel:${formattedPhone}`;
