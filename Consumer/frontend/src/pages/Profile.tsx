@@ -33,7 +33,6 @@ export function Profile() {
     subscribedAt?: string | null;
     unsubscribedAt?: string | null;
     hasPhone: boolean;
-    applinkConfigured?: boolean;
   } | null>(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
 

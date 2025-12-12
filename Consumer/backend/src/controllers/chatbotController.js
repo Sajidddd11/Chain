@@ -228,7 +228,7 @@ ${Object.entries(userContext.consumption.categories).map(([cat, count]) => `- ${
     }
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Use gpt-4o-mini for faster responses (supports multimodal)
+      model: 'gpt-4.1-mini', // Enable GPT-4 for all clients
       messages: messages,
       temperature: 0.7,
       max_tokens: 1000,

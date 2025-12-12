@@ -188,7 +188,7 @@ Return ONLY valid JSON, no markdown, no explanations.`;
     }
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4.1-mini',
       messages: [
         {
           role: 'system',

@@ -257,7 +257,7 @@ Be specific with food names and realistic with recommendations.
 Return ONLY valid JSON, no markdown formatting.`;
 
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
+            model: 'gpt-4.1-mini',
             messages: [{ role: 'user', content: prompt }],
             temperature: 0.7,
             max_tokens: 1500,

@@ -11524,3 +11524,851 @@ img, video, iframe {
     height: 50px;
   }
 }
+/* Subscription Popup Styles */
+.subscription-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.subscription-popup-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 28rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.subscription-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.subscription-popup-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subscription-icon-crown {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #eab308;
+}
+
+.subscription-popup-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.subscription-close-btn {
+  color: #9ca3af;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.subscription-close-btn:hover {
+  color: #4b5563;
+}
+
+.subscription-icon-close {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.subscription-popup-content {
+  padding: 1.5rem;
+}
+
+.subscription-section {
+  margin-bottom: 1.5rem;
+}
+
+.subscription-section-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+.subscription-usage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.subscription-usage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.subscription-usage-label {
+  color: #4b5563;
+  text-transform: capitalize;
+}
+
+.subscription-usage-value {
+  font-weight: 500;
+  color: #111827;
+}
+
+.subscription-usage-value.text-danger {
+  color: #dc2626;
+}
+
+.subscription-section-title-lg {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.subscription-benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.subscription-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.subscription-icon-check {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #22c55e;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.subscription-benefit-title {
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+}
+
+.subscription-benefit-desc {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.subscription-pricing-card {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.subscription-pricing-center {
+  text-align: center;
+}
+
+.subscription-price {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.subscription-period {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.subscription-premium-status {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.subscription-icon-crown-lg {
+  width: 4rem;
+  height: 4rem;
+  color: #eab308;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.subscription-premium-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.subscription-premium-desc {
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+.subscription-badge {
+  background-color: #f0fdf4;
+  color: #166534;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.subscription-popup-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.subscription-btn-secondary {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  color: #374151;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.subscription-btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.subscription-btn-primary {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background-color: #16a34a;
+  color: white;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.subscription-btn-primary:hover {
+  background-color: #15803d;
+}
+
+/* Premium Page Styles */
+.premium-page-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.premium-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.premium-header-title-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.premium-header-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #eab308;
+}
+
+.premium-header-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.premium-header-desc {
+  font-size: 1.125rem;
+  color: #4b5563;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.premium-billing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.premium-billing-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.premium-billing-label.active {
+  color: #111827;
+  font-weight: 500;
+}
+
+.premium-toggle-btn {
+  position: relative;
+  display: inline-flex;
+  height: 1.5rem;
+  width: 2.75rem;
+  align-items: center;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  background-color: #e5e7eb;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.premium-toggle-btn.active {
+  background-color: #16a34a;
+}
+
+.premium-toggle-slider {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  background-color: white;
+  transition: transform 0.2s;
+  transform: translateX(0.25rem);
+}
+
+.premium-toggle-slider.active {
+  transform: translateX(1.5rem);
+}
+
+.premium-billing-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.premium-save-badge {
+  background-color: #dcfce7;
+  color: #166534;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.premium-pricing-wrapper {
+  max-width: 28rem;
+  margin: 0 auto 3rem;
+}
+
+.premium-pricing-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
+  text-align: center;
+}
+
+.premium-plan-header {
+  margin-bottom: 1rem;
+}
+
+.premium-plan-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #eab308;
+  margin: 0 auto 0.5rem;
+  display: block;
+}
+
+.premium-plan-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.premium-price-section {
+  margin-bottom: 1.5rem;
+}
+
+.premium-price-display {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.premium-price-period {
+  font-size: 1.125rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.premium-price-subtext {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.premium-upgrade-btn {
+  width: 100%;
+  background-color: #16a34a;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  margin-bottom: 1rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.premium-upgrade-btn:hover {
+  background-color: #15803d;
+}
+
+.premium-guarantee-text {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.premium-features-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .premium-features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .premium-features-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.premium-feature-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.premium-feature-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.premium-feature-icon-wrapper {
+  background-color: #dcfce7;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.premium-feature-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #16a34a;
+}
+
+.premium-feature-title {
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.premium-feature-desc {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.premium-feature-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.premium-comparison-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.premium-comparison-label {
+  color: #6b7280;
+}
+
+.premium-comparison-label.premium {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.premium-comparison-value {
+  color: #374151;
+}
+
+.premium-comparison-value.premium {
+  color: #15803d;
+  font-weight: 500;
+}
+
+.premium-faq-section {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.premium-faq-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.premium-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.premium-faq-item {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.premium-faq-question {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.premium-faq-answer {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Premium Phone Input Styles */
+.premium-phone-input-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.premium-phone-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.premium-phone-input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+.premium-phone-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.premium-btn-cancel {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.premium-btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.premium-btn-confirm {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.premium-btn-confirm:hover {
+  background-color: #15803d;
+}
+
+.premium-btn-confirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Subscription Input Styles */
+.subscription-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.subscription-input-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.subscription-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #111827;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.subscription-input:focus {
+  outline: none;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.subscription-error-msg {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.subscription-back-btn {
+  color: #6b7280;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  margin-top: 1rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.subscription-back-btn:hover {
+  color: #374151;
+}
+
+.subscription-loading-spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Usage Counter Styles */
+.usage-counter-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.usage-counter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.usage-counter-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.usage-counter-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.usage-counter-premium {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #ffffff;
+}
+
+.usage-counter-locked {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.usage-counter-stats {
+  margin-top: 0.5rem;
+}
+
+.usage-counter-unlimited {
+  text-align: center;
+  padding: 0.75rem;
+}
+
+.usage-counter-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fbbf24;
+  line-height: 1;
+}
+
+.usage-counter-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.usage-counter-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.usage-counter-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.usage-counter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.usage-counter-fill.locked {
+  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+}
+
+.usage-counter-text {
+  font-size: 0.875rem;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.usage-counter-text.locked {
+  color: #ef4444;
+}
+
+.usage-counter-remaining {
+  display: block;
+  font-size: 0.8rem;
+  color: #10b981;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.usage-counter-upgrade-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.usage-counter-upgrade-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.usage-counter-upgrade-btn:active {
+  transform: translateY(0);
+}

@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { useToast } from './ToastContext';
 import { X, Send, Bot, User, Trash2, Image as ImageIcon, Loader2, Mic, MicOff, Volume2 } from 'lucide-react';
+import { UsageCounter } from './UsageCounter';
+import { useUsageStats } from '../hooks/useUsageStats';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -24,6 +26,7 @@ type Props = {
 export function NourishBot({ isOpen, onClose }: Props) {
   const { token } = useAuth();
   const { showToast } = useToast();
+  const { getFeatureStats, isFeatureLocked, isPremium, fetchUsageStats } = useUsageStats();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
@@ -194,6 +197,12 @@ export function NourishBot({ isOpen, onClose }: Props) {
     const textToSend = overrideInput || input;
     if (!token || (!textToSend.trim() && !selectedImage) || sending) return;
 
+    // Check if feature is locked
+    if (isFeatureLocked('ai_chef')) {
+      showToast('error', 'Daily AI Chef limit reached! Upgrade to premium for unlimited access.');
+      return;
+    }
+
     const userMessage = textToSend.trim();
     const imageToSend = selectedImage;
 
@@ -225,6 +234,9 @@ export function NourishBot({ isOpen, onClose }: Props) {
       }));
 
       const response = await api.sendChatbotMessage(token, userMessage, history, imageToSend || undefined);
+
+      // Refresh usage stats after successful API call
+      fetchUsageStats();
 
       // Add assistant response
       const assistantMsg: ChatMessage = {
@@ -407,6 +419,27 @@ export function NourishBot({ isOpen, onClose }: Props) {
             </button>
           </div>
         </div>
+
+        {/* Usage Counter */}
+        {(() => {
+          const stats = getFeatureStats('ai_chef');
+          if (stats) {
+            return (
+              <div style={{ padding: '1rem 1.5rem 0' }}>
+                <UsageCounter
+                  feature="ai_chef"
+                  currentUsage={stats.currentUsage}
+                  limit={stats.limit}
+                  isPremium={isPremium}
+                  onUpgradeClick={() => {
+                    showToast('info', 'Upgrade to premium for unlimited AI Chef access!');
+                  }}
+                />
+              </div>
+            );
+          }
+          return null;
+        })()}
 
         {/* Messages */}
         <div

@@ -16,7 +16,8 @@ import {
   Upload,
   User,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Crown
 } from 'lucide-react';
 import type { NotificationItem } from '../types';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -56,6 +57,7 @@ const iconMap: Record<string, React.ElementType> = {
   messages: MessageSquare,
   uploads: Upload,
   profile: User,
+  premium: Crown,
 };
 
 export function NavBar({

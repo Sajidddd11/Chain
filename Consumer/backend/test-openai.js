@@ -7,7 +7,7 @@ async function testOpenAI() {
   try {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4.1-mini',
       messages: [{ role: 'user', content: 'Say hello in one word' }],
       max_tokens: 5
     });

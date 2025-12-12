@@ -1,5 +1,14 @@
 import { supabase } from '../config/supabaseClient.js';
 import { subscribeUser, unsubscribeUser, isAppLinkConfigured } from '../services/applinkService.js';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// AppLink API Configuration
+const APPLINK_BASE_URL = process.env.APPLINK_BASE_URL || 'https://api.applink.com';
+const APPLINK_APP_ID = process.env.APPLINK_APP_ID;
+const APPLINK_PASSWORD = process.env.APPLINK_PASSWORD;
 
 const USERS_TABLE = 'users';
 
@@ -21,7 +30,7 @@ export const subscribe = async (req, res) => {
 
   try {
     // Get user's phone number
-    const { data: user, error: userError } = await supabase
+    let { data: user, error: userError } = await supabase
       .from(USERS_TABLE)
       .select('phone')
       .eq('id', userId)
@@ -29,9 +38,22 @@ export const subscribe = async (req, res) => {
 
     if (userError) throw userError;
 
+    // If phone number is provided in request, update it
+    if (req.body.phoneNumber) {
+      const { data: updatedProfile, error: updateProfileError } = await supabase
+        .from(USERS_TABLE)
+        .update({ phone: req.body.phoneNumber })
+        .eq('id', userId)
+        .select('phone')
+        .single();
+      
+      if (updateProfileError) throw updateProfileError;
+      user = updatedProfile;
+    }
+
     if (!user?.phone) {
       return res.status(400).json({ 
-        message: 'Phone number is required for subscription. Please add a phone number to your profile.' 
+        message: 'Phone number is required for subscription. Please provide a phone number.' 
       });
     }
 
@@ -329,7 +351,206 @@ export const handleSubscriptionNotification = async (req, res) => {
     // Always return success to AppLink to prevent retries
     return res.json({
       statusCode: 'S1000',
-      statusDetail: 'Notification received',
+      statusDetail: 'Request was successfully processed',
+    });
+  }
+};
+
+// Helper function to make AppLink API calls
+async function callAppLinkAPI(endpoint, payload) {
+  try {
+    const url = `${APPLINK_BASE_URL}${endpoint}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    return { status: response.status, data };
+  } catch (error) {
+    console.error('AppLink API call failed:', error);
+    throw error;
+  }
+}
+
+// User Subscription/Unsubscription
+export const userSubscription = async (req, res) => {
+  try {
+    const { subscriberId, action } = req.body;
+
+    if (!subscriberId || action === undefined) {
+      return res.status(400).json({
+        error: 'Missing required fields: subscriberId and action'
+      });
+    }
+
+    // Validate action (0 = unsubscribe, 1 = subscribe)
+    if (action !== 0 && action !== 1) {
+      return res.status(400).json({
+        error: 'Invalid action. Must be 0 (unsubscribe) or 1 (subscribe)'
+      });
+    }
+
+    const payload = {
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD,
+      subscriberId: subscriberId.startsWith('tel:') ? subscriberId : `tel:${subscriberId}`,
+      action: action.toString()
+    };
+
+    const { status, data } = await callAppLinkAPI('/subscription/userSubscription', payload);
+
+    res.status(status).json(data);
+  } catch (error) {
+    console.error('User subscription error:', error);
+    res.status(500).json({
+      error: 'Failed to process subscription request'
+    });
+  }
+};
+
+// Send Subscription Action
+export const sendSubscription = async (req, res) => {
+  try {
+    const { subscriberId, action } = req.body;
+
+    if (!subscriberId || action === undefined) {
+      return res.status(400).json({
+        error: 'Missing required fields: subscriberId and action'
+      });
+    }
+
+    const payload = {
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD,
+      subscriberId: subscriberId.startsWith('tel:') ? subscriberId : `tel:${subscriberId}`,
+      action: action.toString()
+    };
+
+    const { status, data } = await callAppLinkAPI('/subscription/send', payload);
+
+    res.status(status).json(data);
+  } catch (error) {
+    console.error('Send subscription error:', error);
+    res.status(500).json({
+      error: 'Failed to send subscription request'
+    });
+  }
+};
+
+// Get Base Size (number of registered subscribers)
+export const getBaseSize = async (req, res) => {
+  try {
+    const payload = {
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD
+    };
+
+    const { status, data } = await callAppLinkAPI('/subscription/baseSize', payload);
+
+    res.status(status).json(data);
+  } catch (error) {
+    console.error('Get base size error:', error);
+    res.status(500).json({
+      error: 'Failed to get base size'
+    });
+  }
+};
+
+// Query Base Size
+export const queryBase = async (req, res) => {
+  try {
+    const payload = {
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD
+    };
+
+    const { status, data } = await callAppLinkAPI('/subscription/query-base', payload);
+
+    res.status(status).json(data);
+  } catch (error) {
+    console.error('Query base error:', error);
+    res.status(500).json({
+      error: 'Failed to query base'
+    });
+  }
+};
+
+// Get Subscriber Charging Info
+export const getSubscriberChargingInfo = async (req, res) => {
+  try {
+    const { subscriberIds } = req.body;
+
+    if (!subscriberIds || !Array.isArray(subscriberIds)) {
+      return res.status(400).json({
+        error: 'subscriberIds must be an array'
+      });
+    }
+
+    if (subscriberIds.length > 10) {
+      return res.status(400).json({
+        error: 'Maximum 10 subscriber IDs allowed per request'
+      });
+    }
+
+    const payload = {
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD,
+      subscriberIds: subscriberIds.map(id => id.startsWith('tel:') ? id : `tel:${id}`)
+    };
+
+    const { status, data } = await callAppLinkAPI('/subscription/getSubscriberChargingInfo', payload);
+
+    res.status(status).json(data);
+  } catch (error) {
+    console.error('Get subscriber charging info error:', error);
+    res.status(500).json({
+      error: 'Failed to get subscriber charging info'
+    });
+  }
+};
+
+// Send Notification to Subscriber
+export const sendNotification = async (req, res) => {
+  try {
+    const { timeStamp, version = '1.0', subscriberId, frequency, status } = req.body;
+
+    if (!timeStamp || !subscriberId || !frequency || !status) {
+      return res.status(400).json({
+        error: 'Missing required fields: timeStamp, subscriberId, frequency, status'
+      });
+    }
+
+    // Validate frequency
+    const validFrequencies = ['daily', 'weekly', 'monthly', 'yearly'];
+    if (!validFrequencies.includes(frequency)) {
+      return res.status(400).json({
+        error: 'Invalid frequency. Must be one of: daily, weekly, monthly, yearly'
+      });
+    }
+
+    const payload = {
+      timeStamp,
+      version,
+      applicationId: APPLINK_APP_ID,
+      password: APPLINK_PASSWORD,
+      subscriberId: subscriberId.startsWith('tel:') ? subscriberId : `tel:${subscriberId}`,
+      frequency,
+      status
+    };
+
+    const { status: responseStatus, data } = await callAppLinkAPI('/subscription/notify', payload);
+
+    res.status(responseStatus).json(data);
+  } catch (error) {
+    console.error('Send notification error:', error);
+    res.status(500).json({
+      error: 'Failed to send notification'
     });
   }
 };

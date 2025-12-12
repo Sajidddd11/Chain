@@ -3,9 +3,12 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import type { ConsumptionLog, InventoryItem } from '../types';
 import { Utensils, Package, Sparkles, ChevronDown, Save, AlertCircle } from 'lucide-react';
+import { UsageCounter } from '../components/UsageCounter';
+import { useUsageStats } from '../hooks/useUsageStats';
 
 export function Logs() {
   const { token } = useAuth();
+  const { getFeatureStats, isFeatureLocked, isPremium, fetchUsageStats } = useUsageStats();
   const [logs, setLogs] = useState<ConsumptionLog[]>([]);
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,10 +59,18 @@ export function Logs() {
 
   const fetchAnalytics = async () => {
     if (!token) return;
+
+    // Check if feature is locked
+    if (isFeatureLocked('analytics')) {
+      return;
+    }
+
     try {
       setAnalyticsLoading(true);
       const response = await api.getConsumptionPatterns(token, analyticsPeriod);
       setAnalyticsData(response);
+      // Refresh usage stats after successful API call
+      fetchUsageStats();
     } catch (err) {
       console.error('Failed to load analytics', err);
     } finally {
@@ -496,6 +507,23 @@ export function Logs() {
 
       {/* Analytics Section */}
       <div className="card" style={{ marginBottom: '1.5rem', padding: '1.5rem' }}>
+        {/* Usage Counter for Analytics */}
+        {(() => {
+          const stats = getFeatureStats('analytics');
+          if (stats) {
+            return (
+              <UsageCounter
+                feature="analytics"
+                currentUsage={stats.currentUsage}
+                limit={stats.limit}
+                isPremium={isPremium}
+                onUpgradeClick={() => {}}
+              />
+            );
+          }
+          return null;
+        })()}
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Consumption Analytics</h3>

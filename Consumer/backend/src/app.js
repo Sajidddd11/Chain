@@ -22,6 +22,7 @@ import sdgRoutes from './routes/sdgRoutes.js';
 import nutritionRoutes from './routes/nutritionRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
+import usageRoutes from './routes/usageRoutes.js';
 
 dotenv.config();
 
@@ -96,6 +97,7 @@ app.use('/api/sdg', sdgRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/usage', usageRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

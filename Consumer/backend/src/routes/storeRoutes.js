@@ -1,5 +1,6 @@
 import express from 'express';
 import { authenticate as authMiddleware, requireAdmin } from '../middleware/authMiddleware.js';
+import { checkUsageLimit } from '../middleware/usageLimitMiddleware.js';
 import {
   // Product Management (Admin)
   createProduct,
@@ -50,7 +51,7 @@ router.delete('/cart', authMiddleware, clearCart);
 router.post('/payment-intent', authMiddleware, createPaymentIntent);
 
 // Protected Routes - Order Management (Requires Authentication)
-router.post('/orders', authMiddleware, createOrder);
+router.post('/orders', authMiddleware, checkUsageLimit('marketplace', 5), createOrder);
 router.get('/orders', authMiddleware, getOrders);
 router.get('/orders/:id', authMiddleware, getOrderById);
 

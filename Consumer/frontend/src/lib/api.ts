@@ -453,13 +453,17 @@ export const api = {
       hasPhone: boolean;
       applinkConfigured?: boolean;
     }>('/api/subscription/status', { token }),
-  subscribe: (token: string) =>
+  subscribe: (token: string, phoneNumber?: string) =>
     request<{
       message: string;
       subscribed: boolean;
       subscriptionStatus?: string | null;
       subscribedAt?: string | null;
-    }>('/api/subscription/subscribe', { method: 'POST', token }),
+    }>('/api/subscription/subscribe', { 
+      method: 'POST', 
+      token,
+      body: { phoneNumber }
+    }),
   unsubscribe: (token: string) =>
     request<{
       message: string;
@@ -467,4 +471,15 @@ export const api = {
       subscriptionStatus?: string | null;
       unsubscribedAt?: string | null;
     }>('/api/subscription/unsubscribe', { method: 'POST', token }),
+  // Usage Stats
+  getUsageStats: (token: string) =>
+    request<{
+      success: boolean;
+      stats: Array<{
+        feature: string;
+        currentUsage: number;
+        limit: number;
+        remaining: number;
+      }>;
+    }>('/api/usage/stats', { token }),
 };

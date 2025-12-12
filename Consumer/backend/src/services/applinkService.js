@@ -56,26 +56,24 @@ const makeAppLinkRequest = async (endpoint, payload) => {
 
 /**
  * Subscribe a user to AppLink services
- * @param {string} subscriberId - Phone number in format tel:+8801XXXXXXXXX
+ * @param {string} subscriberId - Phone number in format tel:8801XXXXXXXXX
  * @returns {Promise<Object>} AppLink API response
  */
 export const subscribeUser = async (subscriberId) => {
   // Ensure phone number is in correct format
   let formattedPhone = subscriberId;
-  if (!formattedPhone.startsWith('tel:')) {
-    if (formattedPhone.startsWith('+880')) {
-      formattedPhone = `tel:${formattedPhone}`;
-    } else if (formattedPhone.startsWith('880')) {
-      formattedPhone = `tel:+${formattedPhone}`;
-    } else if (formattedPhone.startsWith('01')) {
-      formattedPhone = `tel:+880${formattedPhone}`;
-    } else {
-      formattedPhone = `tel:${formattedPhone}`;
-    }
+  // Remove any existing tel: prefix or + sign to clean up
+  formattedPhone = formattedPhone.replace(/^tel:/, '').replace(/^\+/, '');
+  
+  // Ensure it starts with 880
+  if (formattedPhone.startsWith('01')) {
+    formattedPhone = `880${formattedPhone}`;
   }
+  
+  // Add tel: prefix
+  formattedPhone = `tel:${formattedPhone}`;
 
   const payload = {
-    version: '1.0',
     subscriberId: formattedPhone,
     action: '1', // 1 = subscribe, 0 = unsubscribe
   };
@@ -97,26 +95,24 @@ export const subscribeUser = async (subscriberId) => {
 
 /**
  * Unsubscribe a user from AppLink services
- * @param {string} subscriberId - Phone number in format tel:+8801XXXXXXXXX
+ * @param {string} subscriberId - Phone number in format tel:8801XXXXXXXXX
  * @returns {Promise<Object>} AppLink API response
  */
 export const unsubscribeUser = async (subscriberId) => {
   // Ensure phone number is in correct format
   let formattedPhone = subscriberId;
-  if (!formattedPhone.startsWith('tel:')) {
-    if (formattedPhone.startsWith('+880')) {
-      formattedPhone = `tel:${formattedPhone}`;
-    } else if (formattedPhone.startsWith('880')) {
-      formattedPhone = `tel:+${formattedPhone}`;
-    } else if (formattedPhone.startsWith('01')) {
-      formattedPhone = `tel:+880${formattedPhone}`;
-    } else {
-      formattedPhone = `tel:${formattedPhone}`;
-    }
+  // Remove any existing tel: prefix or + sign to clean up
+  formattedPhone = formattedPhone.replace(/^tel:/, '').replace(/^\+/, '');
+  
+  // Ensure it starts with 880
+  if (formattedPhone.startsWith('01')) {
+    formattedPhone = `880${formattedPhone}`;
   }
+  
+  // Add tel: prefix
+  formattedPhone = `tel:${formattedPhone}`;
 
   const payload = {
-    version: '1.0',
     subscriberId: formattedPhone,
     action: '0', // 0 = unsubscribe, 1 = subscribe
   };
@@ -141,9 +137,7 @@ export const unsubscribeUser = async (subscriberId) => {
  * @returns {Promise<Object>} AppLink API response with baseSize
  */
 export const getSubscriptionBaseSize = async () => {
-  const payload = {
-    version: '1.0',
-  };
+  const payload = {};
 
   try {
     const response = await makeAppLinkRequest('/subscription/query-base', payload);
@@ -156,6 +150,40 @@ export const getSubscriptionBaseSize = async () => {
     };
   } catch (error) {
     console.error('AppLink get base size error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get subscriber charging info
+ * @param {string[]} subscriberIds - Array of phone numbers
+ * @returns {Promise<Object>} AppLink API response
+ */
+export const getSubscriberChargingInfo = async (subscriberIds) => {
+  // Format all phone numbers
+  const formattedIds = subscriberIds.map(id => {
+    let formatted = id.replace(/^tel:/, '').replace(/^\+/, '');
+    if (formatted.startsWith('01')) {
+      formatted = `880${formatted}`;
+    }
+    return `tel: ${formatted}`; // Note: Doc shows space after tel: "tel: 880..."
+  });
+
+  const payload = {
+    subscriberIds: formattedIds,
+  };
+
+  try {
+    const response = await makeAppLinkRequest('/subscription/getSubscriberChargingInfo', payload);
+    return {
+      success: response.statusCode === 'S1000',
+      statusCode: response.statusCode,
+      statusDetail: response.statusDetail,
+      destinationResponses: response.destinationResponses,
+      version: response.version,
+    };
+  } catch (error) {
+    console.error('AppLink get charging info error:', error);
     throw error;
   }
 };

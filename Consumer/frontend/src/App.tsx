@@ -25,6 +25,8 @@ import { initializePushNotifications } from './utils/pushNotifications';
 import NourishBot from './components/NourishBot';
 import { SDGImpact } from './pages/SDGImpact';
 import { DynamicTranslationProvider } from './components/AutoTranslate';
+import { Premium } from './pages/Premium';
+import { SubscriptionPopup } from './components/SubscriptionPopup';
 
 type RenderExtras = {
   storeFocusProductId?: string | null;
@@ -67,6 +69,8 @@ function renderPage(
       return <Uploads />;
     case 'profile':
       return <Profile />;
+    case 'premium':
+      return <Premium />;
     case 'dashboard':
     default:
       return <Dashboard />;
@@ -85,6 +89,8 @@ function AppShell() {
   const [initialPageSet, setInitialPageSet] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [subscriptionPopupOpen, setSubscriptionPopupOpen] = useState(false);
+  const [userUsageStats, setUserUsageStats] = useState<any[]>([]);
 
   // Handle responsive resizing
   useEffect(() => {
@@ -96,16 +102,38 @@ function AppShell() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Fetch usage stats
+  const fetchUsageStats = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await api.getUsageStats(token);
+      if (response.success) {
+        setUserUsageStats(response.stats);
+      }
+    } catch (error) {
+      console.error('Failed to fetch usage stats:', error);
+    }
+  }, [token]);
+
   // Set initial page based on user role
   useEffect(() => {
     if (user && !initialPageSet) {
       setActivePage(user.role === 'admin' ? 'store-admin' : 'dashboard');
       setInitialPageSet(true);
+
+      fetchUsageStats();
+
+      // Show subscription popup after login (with a small delay)
+      setTimeout(() => {
+        setSubscriptionPopupOpen(true);
+      }, 2000);
     }
     if (!user) {
       setInitialPageSet(false);
+      setSubscriptionPopupOpen(false);
+      setUserUsageStats([]);
     }
-  }, [user, initialPageSet]);
+  }, [user, initialPageSet, fetchUsageStats]);
 
   useEffect(() => {
     const handler = (event: WindowEventMap['inventory:view-store-product']) => {
@@ -230,6 +258,7 @@ function AppShell() {
     { key: 'orders', label: 'My Orders' },
     { key: 'messages', label: 'Messages' },
     { key: 'uploads', label: 'Uploads' },
+    { key: 'premium', label: 'Premium' },
     { key: 'profile', label: t('nav.profile') },
   ];
 
@@ -291,6 +320,18 @@ function AppShell() {
           badges={navBadges}
         />
       )}
+
+      {/* Subscription Popup */}
+      <SubscriptionPopup
+        isOpen={subscriptionPopupOpen}
+        onClose={() => setSubscriptionPopupOpen(false)}
+        onUpgrade={() => {
+          setSubscriptionPopupOpen(false);
+          setActivePage('premium');
+        }}
+        userTier={user?.subscription_tier || 'free'}
+        usageStats={userUsageStats}
+      />
     </div>
   );
 }

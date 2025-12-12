@@ -14,6 +14,7 @@ export type UserProfile = {
   budget_period?: 'daily' | 'weekly' | 'monthly' | 'yearly' | null;
   location?: string | null;
   reward_points?: number | null;
+  subscription_tier?: 'free' | 'premium' | 'pro' | null;
   applink_subscribed?: boolean | null;
   applink_subscription_status?: string | null;
   applink_subscribed_at?: string | null;

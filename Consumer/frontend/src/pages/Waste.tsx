@@ -18,6 +18,8 @@ import {
   Gift,
   Clock3,
 } from 'lucide-react';
+import { UsageCounter } from '../components/UsageCounter';
+import { useUsageStats } from '../hooks/useUsageStats';
 
 type WasteFormState = {
   itemName: string;
@@ -50,6 +52,7 @@ type TabType = 'overview' | 'track';
 
 export function Waste() {
   const { token, refreshProfile } = useAuth();
+  const { getFeatureStats, isFeatureLocked, isPremium, fetchUsageStats } = useUsageStats();
   const [items, setItems] = useState<WasteItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<WasteFormState>({
@@ -169,12 +172,20 @@ export function Waste() {
   const handlePickupRequest = async () => {
     if (!token) return;
 
+    // Check if feature is locked
+    if (isFeatureLocked('waste_pickup')) {
+      setPickupError('Daily waste pickup limit reached! Upgrade to premium for unlimited pickups.');
+      return;
+    }
+
     setPickupSubmitting(true);
     setPickupError(null);
     setPickupSuccess(null);
 
     try {
       const response = await api.requestWastePickup(token);
+      // Refresh usage stats after successful API call
+      fetchUsageStats();
       setPickupSuccess(`Pickup scheduled! +${response.rewardPoints} reward points`);
       await Promise.all([
         loadWasteItems(),
@@ -428,6 +439,25 @@ export function Waste() {
       </div>
 
       <div className="pickup-card">
+        {/* Usage Counter for Waste Pickup */}
+        {(() => {
+          const stats = getFeatureStats('waste_pickup');
+          if (stats) {
+            return (
+              <div style={{ marginBottom: '1rem' }}>
+                <UsageCounter
+                  feature="waste_pickup"
+                  currentUsage={stats.currentUsage}
+                  limit={stats.limit}
+                  isPremium={isPremium}
+                  onUpgradeClick={() => {}}
+                />
+              </div>
+            );
+          }
+          return null;
+        })()}
+
         <div className="pickup-card-header">
           <div className="pickup-card-title">
             <Truck size={20} />
