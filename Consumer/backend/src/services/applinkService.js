@@ -187,3 +187,113 @@ export const getSubscriberChargingInfo = async (subscriberIds) => {
     throw error;
   }
 };
+
+/**
+ * Request charging OTP (CaaS direct debit)
+ * @param {string} subscriberId - Phone number
+ * @param {string} amount - Amount to charge (e.g., "49.00")
+ * @param {string} externalTrxId - Unique transaction ID from your system
+ * @returns {Promise<Object>} AppLink API response with reference number
+ */
+export const requestChargingOTP = async (subscriberId, amount, externalTrxId) => {
+  // Format phone number
+  let formattedPhone = subscriberId.replace(/^tel:/, '').replace(/^\+/, '');
+  if (formattedPhone.startsWith('01')) {
+    formattedPhone = `880${formattedPhone}`;
+  }
+  formattedPhone = `tel:${formattedPhone}`;
+
+  const payload = {
+    externalTrxId,
+    amount: parseFloat(amount).toFixed(2),
+    paymentInstrumentName: 'Mobile Account',
+    subscriberId: formattedPhone,
+    Currency: 'BDT',
+  };
+
+  try {
+    const response = await makeAppLinkRequest('/caas/direct/debit', payload);
+    return {
+      success: response.statusCode === 'S1000' || response.statusCode === 'P1003',
+      statusCode: response.statusCode,
+      statusDetail: response.statusDetail,
+      requestCorrelator: response.requestCorrelator,
+      internalTrxId: response.internalTrxId,
+      externalTrxId: response.externalTrxId,
+      timeStamp: response.timeStamp,
+    };
+  } catch (error) {
+    console.error('AppLink request charging OTP error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Verify charging OTP and complete payment
+ * @param {string} referenceNo - Request correlator from OTP generation
+ * @param {string} otp - OTP entered by user
+ * @param {string} sourceAddress - Phone number
+ * @returns {Promise<Object>} AppLink API response
+ */
+export const verifyChargingOTP = async (referenceNo, otp, sourceAddress) => {
+  // Format phone number
+  let formattedPhone = sourceAddress.replace(/^tel:/, '').replace(/^\+/, '');
+  if (formattedPhone.startsWith('01')) {
+    formattedPhone = `880${formattedPhone}`;
+  }
+  formattedPhone = `tel:${formattedPhone}`;
+
+  const payload = {
+    referenceNo,
+    otp,
+    sourceAddress: formattedPhone,
+  };
+
+  try {
+    const response = await makeAppLinkRequest('/caas/otp/verify', payload);
+    return {
+      success: response.statusCode === 'S1000',
+      statusCode: response.statusCode,
+      statusDetail: response.statusDetail,
+      timeStamp: response.timeStamp,
+      externalTrxId: response.externalTrxId,
+      internalTrxId: response.internalTrxId,
+    };
+  } catch (error) {
+    console.error('AppLink verify charging OTP error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Query subscriber balance
+ * @param {string} subscriberId - Phone number
+ * @returns {Promise<Object>} AppLink API response with balance info
+ */
+export const queryBalance = async (subscriberId) => {
+  // Format phone number
+  let formattedPhone = subscriberId.replace(/^tel:/, '').replace(/^\+/, '');
+  if (formattedPhone.startsWith('01')) {
+    formattedPhone = `880${formattedPhone}`;
+  }
+  formattedPhone = `tel:${formattedPhone}`;
+
+  const payload = {
+    subscriberId: formattedPhone,
+  };
+
+  try {
+    const response = await makeAppLinkRequest('/caas/get/balance', payload);
+    return {
+      success: response.statusCode === 'S1000',
+      statusCode: response.statusCode,
+      statusDetail: response.statusDetail,
+      accountStatus: response.accountStatus,
+      accountType: response.accountType,
+      accountBalance: response.accountBalance,
+    };
+  } catch (error) {
+    console.error('AppLink query balance error:', error);
+    throw error;
+  }
+};

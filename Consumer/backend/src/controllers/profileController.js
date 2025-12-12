@@ -62,11 +62,11 @@ export const getProfile = async (req, res) => {
           .select(selectFields)
           .eq('id', req.user.id)
           .single();
-        
+
         if (basicError) throw basicError;
-        
+
         // Add default subscription values
-        return res.json({ 
+        return res.json({
           profile: {
             ...basicData,
             applink_subscribed: false,
@@ -86,14 +86,14 @@ export const getProfile = async (req, res) => {
         .select('applink_subscribed, applink_subscription_status, applink_subscribed_at, applink_unsubscribed_at')
         .eq('id', req.user.id)
         .single();
-      
+
       if (subData) {
         return res.json({ profile: { ...data, ...subData } });
       }
     } catch (subError) {
       // Subscription columns don't exist, return without them
       if (subError.code === '42703') {
-        return res.json({ 
+        return res.json({
           profile: {
             ...data,
             applink_subscribed: false,
@@ -130,9 +130,10 @@ export const updateProfile = async (req, res) => {
   } = req.body;
 
   if (phone) {
-    const phoneRegex = /^\+8801\d{9}$/;
+    // Accept both: 01XXXXXXXXX or +8801XXXXXXXXX
+    const phoneRegex = /^(\+?880)?0?1\d{9}$/;
     if (!phoneRegex.test(phone)) {
-      return res.status(400).json({ message: 'Phone number must follow +8801XXXXXXXXX format' });
+      return res.status(400).json({ message: 'Please enter a valid 11-digit mobile number' });
     }
   }
 

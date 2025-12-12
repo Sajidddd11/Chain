@@ -459,8 +459,8 @@ export const api = {
       subscribed: boolean;
       subscriptionStatus?: string | null;
       subscribedAt?: string | null;
-    }>('/api/subscription/subscribe', { 
-      method: 'POST', 
+    }>('/api/subscription/subscribe', {
+      method: 'POST',
       token,
       body: { phoneNumber }
     }),
@@ -482,4 +482,28 @@ export const api = {
         remaining: number;
       }>;
     }>('/api/usage/stats', { token }),
+  // CaaS Premium Subscription
+  requestPremiumOTP: (token: string) =>
+    request<{
+      success: boolean;
+      message: string;
+      referenceNo: string;
+      externalTrxId: string;
+      amount: string;
+    }>('/api/caas/request-otp', { method: 'POST', token }),
+  verifyPremiumOTP: (token: string, otp: string, referenceNo: string) =>
+    request<{
+      success: boolean;
+      message: string;
+      statusCode: string;
+    }>('/api/caas/verify-otp', { method: 'POST', token, body: { otp, referenceNo } }),
+  getSubscriberBalance: (token: string) =>
+    request<{
+      success: boolean;
+      accountStatus?: string;
+      accountType?: string;
+      accountBalance?: string;
+      statusCode: string;
+      statusDetail: string;
+    }>('/api/caas/balance', { token }),
 };

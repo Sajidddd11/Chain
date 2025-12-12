@@ -23,6 +23,7 @@ import nutritionRoutes from './routes/nutritionRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import usageRoutes from './routes/usageRoutes.js';
+import caasRoutes from './routes/caasRoutes.js';
 
 dotenv.config();
 
@@ -98,6 +99,7 @@ app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/usage', usageRoutes);
+app.use('/api/caas', caasRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);
